@@ -39,6 +39,7 @@ declare global {
     readerUsername: string;
     typeReader: any;
     roleName: string;
+    avatarUrl: string;
   }
 
   interface ISignIn {
@@ -106,11 +107,10 @@ declare global {
   }
 
   export interface IHeaderBook {
+    idHeaderBook: string;
     idTypeBook: string;
-    nameHeaderBook: string;
-    describeBook: string;
-    idAuthors: string[];
-    bookCreateRequest: IBookCreateRequest;
+    nameBook: string;
+    describe: string;
   }
 
   export interface IAddBookReceiptPayload {
@@ -263,6 +263,7 @@ declare global {
     returnDate: string; // ISO date string
     fineAmount: number;
     nameBook: string;
+    loanPeriod: number;
   }
   export interface IGetStarByIdBook {
     star: number;

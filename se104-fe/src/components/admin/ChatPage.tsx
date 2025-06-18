@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { getChatHistoryAPI, sendMessageAPI } from "@/services/api";
-import { message as antdMessage } from "antd";
-import { useCurrentApp } from "@/components/context/app.context";
+import { message as antdMessage, message } from "antd";
+interface ChatProps {
+  receiverId: string;
+  receiveUserName: string;
+  avatarUrl: string;
+}
 
-const Chat = () => {
+const Chat = ({ receiverId, receiveUserName, avatarUrl }: ChatProps) => {
   const [messages, setMessages] = useState<IChatMessage[]>([]);
   const [input, setInput] = useState("");
-  const { user } = useCurrentApp();
 
-  const receiverId = "rd00025";
   const senderId = localStorage.getItem("idUser") ?? "";
 
   useEffect(() => {
@@ -29,7 +31,7 @@ const Chat = () => {
     };
 
     fetchMessages();
-    interval = setInterval(fetchMessages, 3000);
+    interval = setInterval(fetchMessages, 5000);
 
     return () => clearInterval(interval);
   }, [receiverId, senderId, messages.length]);
@@ -78,7 +80,7 @@ const Chat = () => {
             >
               {!isSender && (
                 <img
-                  src="https://thumbs.dreamstime.com/b/man-people-admin-avatar-icon-272321203.jpg"
+                  src={avatarUrl}
                   alt="avatar"
                   className="w-8 h-8 rounded-full mr-2"
                 />
@@ -91,7 +93,7 @@ const Chat = () => {
                       : "text-red-600 italic"
                   }`}
                 >
-                  {isSender ? "Bạn" : "Thủ thư"}
+                  {isSender ? "Bạn" : receiveUserName}
                 </p>
                 <div className="bg-white rounded-full px-4 py-2 shadow text-sm italic font-semibold">
                   {msg.content.data}
@@ -99,7 +101,7 @@ const Chat = () => {
               </div>
               {isSender && (
                 <img
-                  src={user?.avatarUrl}
+                  src="https://i.imgur.com/1Q8ZQqX.png"
                   alt="avatar"
                   className="w-8 h-8 rounded-full ml-2"
                 />

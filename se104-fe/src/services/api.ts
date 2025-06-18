@@ -362,16 +362,38 @@ export const getAllParametersAPI = async () => {
   const res = await axios.get("/api/Parameter/getallparameter");
   return res;
 };
-export const getBookStatsByGenreAPI = async () => {};
-
+export const getAmountByTypeBookAPI = async (month: number) => {
+  const res = await axios.get("/api/LoanSlipBook/getAmountByTypeBook", {
+    params: { month },
+  });
+  return res;
+};
 export const findBooksByNameAPI = async (namebook: string) => {
   const url = `/api/Book/findBooks${encodeURIComponent(namebook)}`;
   const res = await axios.get<IBook[]>(url);
   return res;
 };
+<<<<<<< HEAD
 export const getPenaltiesByIdAPI = (idUser: string) => {
   return axios.get<{ createdDate: string; totalDebit: number; amountCollected: number; amountRemaining: number }>(`/api/PenaltyTicket/getPenatiesById${idUser}`);
 };
 export const getReceiptHistoryAPI = (idUser: string) => {
   return axios.get<IReturn[]>(`/api/LoanSlipBook/GetReceiptHistory?idUser=${idUser}`);
+=======
+export const getAllHeaderBooksAPI = async () => {
+  const res = await axios.get<IHeaderBook[]>("/api/Book/getallheaderbooks");
+  return res;
+};
+export const getChatUsersAPI = async () => {
+  const res = await axios.get("/api/Chat/getAllUserSentMessage");
+  return res;
+};
+export const logoutAPI = async (refreshToken: string) => {
+  return axios.post("/api/Authentication/logout", { refreshToken });
+};
+export const getReaderByIdAPI = async (idreader: string) => {
+  const url = `/api/reader/Reader/getReaderBy${idreader}`;
+  const res = await axios.get(url);
+  return res;
+>>>>>>> origin
 };
