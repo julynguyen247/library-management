@@ -274,7 +274,7 @@ const ProfilePage = () => {
             onCancel={() => setShowAvatarModal(false)}
             footer={null}
             centered
-            bodyStyle={{ padding: 0, background: "transparent" }}
+            styles={{ body: { padding: 0, background: "transparent" } }}
             width={400}
             className="avatar-modal"
           >

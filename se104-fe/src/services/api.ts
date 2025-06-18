@@ -369,3 +369,9 @@ export const findBooksByNameAPI = async (namebook: string) => {
   const res = await axios.get<IBook[]>(url);
   return res;
 };
+export const getPenaltiesByIdAPI = (idUser: string) => {
+  return axios.get<{ createdDate: string; totalDebit: number; amountCollected: number; amountRemaining: number }>(`/api/PenaltyTicket/getPenatiesById${idUser}`);
+};
+export const getReceiptHistoryAPI = (idUser: string) => {
+  return axios.get<IReturn[]>(`/api/LoanSlipBook/GetReceiptHistory?idUser=${idUser}`);
+};
