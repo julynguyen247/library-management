@@ -78,7 +78,7 @@ export const listAuthorAPI = () => {
 };
 
 export const updateAuthorAPI = (idAuthor: string, formData: FormData) => {
-    const urlBackend = `/api/Author/update-author/${idAuthor}`;
+    const urlBackend = `/api/Author/update-author?idAuthor=${idAuthor}`;
     return axios.patch<IBackendRes<any>>(urlBackend, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
@@ -129,7 +129,7 @@ export const addReaderAPI = (formData: FormData) => {
 
 export const updateReaderAPI = (idReader: string, formData: FormData) => {
     return axios.patch<IBackendRes<any>>(
-        `/api/reader/Reader/update-reader/${idReader}`,
+        `/api/reader/Reader/update-reader?idReader=${idReader}`,
         formData,
         {
             headers: {
@@ -143,7 +143,7 @@ export const findReaderAPI = (token: string, username: string) => {
     return axios.post<IBackendRes<any>>(urlBackend, { token, username });
 };
 export const getTypeBooksAPI = () => {
-    return axios.get('/api/TypeBook/getAllTypeBook');
+    return axios.get('/api/TypeBook/list-all-typebook');
 };
 
 export const addLoanBookAPI = (idReader: string, idTheBook: string) => {
@@ -170,7 +170,7 @@ export const getTypeReadersAPI = () => {
     return axios.get('/api/TypeReader/get-all-typereader');
 };
 export const getListAuthor = () => {
-    return axios.get<IAddAuthor[]>('/api/Author/list-author');
+    return axios.get<IManyAuthor>('/api/Author/list-author');
 };
 export const getListReader = () => {
     return axios.get<IManyReader>('/api/reader/Reader/list-reader');
@@ -223,7 +223,7 @@ export const deleteReaderAPI = (idReader: string) => {
     return axios.delete(`/api/reader/Reader/delete-reader/${idReader}`);
 };
 export const deleteBookAPI = (idBook: string) => {
-    return axios.delete(`/api/Book/delete-book/${idBook}`);
+    return axios.delete(`/api/Book/delete-book?idBook=${idBook}`);
 };
 
 //evaluation
@@ -247,7 +247,7 @@ export const getStarByIdBookAPI = async (idBook: string) => {
 
 export const updateBookAPI = (idBook: string, formData: FormData) => {
     return axios.patch<IBackendRes<any>>(
-        `/api/Book/update-book/${idBook}`,
+        `/api/Book/update-book?idBook=${idBook}`,
         formData,
         {
             headers: {
@@ -351,7 +351,7 @@ export const updateParameterAPI = async (
     data: { nameParameter: string; valueParameter: number }
 ) => {
     const res = await axios.put(
-        `/api/Parameter/update-parameter/${idParameter}`,
+        `/api/Parameter/update-parameter?idParameter=${idParameter}`,
         data
     );
     return res;
@@ -407,7 +407,7 @@ export const getBookStatusAPI = async (idThebook: string) => {
 };
 export const getHeaderBookByTheBookIdAPI = async (thebookId: string) => {
     const res = await axios.get(
-        `/api/Book/headerbook-by-thebook-id${thebookId}`
+        `/api/Book/headerbook-by-thebook-id?idTheBook=${thebookId}`
     );
     return res;
 };
