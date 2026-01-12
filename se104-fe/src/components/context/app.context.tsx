@@ -33,16 +33,24 @@ export const AppProvider = ({ children }: TProps) => {
 
       try {
         const res = await authenticateAPI(token);
-        if (res) {
+
+        // --- SỬA ĐOẠN NÀY ---
+        // Kiểm tra kỹ: Phải có res, có data và quan trọng là phải có trường roleName (hoặc idUser)
+        // Vì nếu API lỗi, res vẫn trả về object { data: { message: "Lỗi..." }, status: 500 } -> Cái này không phải User!
+        if (res && res.data && res.data.roleName) {
           setIsAuthenticated(true);
           setUser(res);
         } else {
+          // Nếu res tồn tại nhưng không đúng cấu trúc user -> Coi như lỗi
+          console.warn("Token không hợp lệ hoặc hết hạn", res);
           setIsAuthenticated(false);
           setUser(null);
           localStorage.removeItem("token");
+          localStorage.removeItem("refreshToken");
         }
+        // ---------------------
       } catch (err) {
-        console.error("Failed to authenticate:", err);
+        // ... (giữ nguyên catch)
         setIsAuthenticated(false);
         setUser(null);
         localStorage.removeItem("token");

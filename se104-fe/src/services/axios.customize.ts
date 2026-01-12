@@ -1,14 +1,14 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL,
+  baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:8080/",
 });
 const handleRefreshToken = async () => {
-  const accessToken = localStorage.getItem("token");
-  const res = await instance.post("/api/Authentication/RefreshToken", {
-    accessToken,
+  const refreshToken = localStorage.getItem("refreshToken");
+  const res = await instance.post("/api/Authentication/refresh-token", {
+    token: refreshToken,
   });
-  if (res) return res.access_token;
+  if (res) return res.data.access_token;
   else return null;
 };
 instance.interceptors.request.use(
@@ -25,11 +25,8 @@ instance.interceptors.request.use(
   }
 );
 
-// Add a response interceptor
 instance.interceptors.response.use(
   function (response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
     if (response && response?.data) return response.data;
     return response;
   },

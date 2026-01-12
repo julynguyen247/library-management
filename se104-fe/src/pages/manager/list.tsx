@@ -1,87 +1,171 @@
-import React, { useState } from "react";
-import BookList from "@/components/admin/listPage/BookList";
-import ReaderList from "@/components/admin/listPage/ReaderList";
-import AuthorList from "@/components/admin/listPage/AuthorList";
-import TypeReaderList from "@/components/admin/listPage/TypeReaderList";
-import TypeBookList from "@/components/admin/listPage/TypeBookList";
+import React, { useState, useEffect } from 'react';
+import {
+    Input,
+    Tabs,
+    Badge,
+    Avatar,
+    Layout,
+    Typography,
+    Dropdown,
+    MenuProps,
+    Button,
+} from 'antd';
+import {
+    SearchOutlined,
+    BellOutlined,
+    UserOutlined,
+    DownOutlined,
+    TeamOutlined,
+    SolutionOutlined,
+    ReadOutlined,
+    TagsOutlined,
+    BookOutlined,
+    LogoutOutlined,
+    SettingOutlined,
+} from '@ant-design/icons';
+
+// Import các component con của bạn
+import BookList from '@/components/admin/listPage/BookList';
+import ReaderList from '@/components/admin/listPage/ReaderList';
+import AuthorList from '@/components/admin/listPage/AuthorList';
+import TypeReaderList from '@/components/admin/listPage/TypeReaderList';
+import TypeBookList from '@/components/admin/listPage/TypeBookList';
+
+const { Content } = Layout;
+const { Title, Text } = Typography;
 
 const List = () => {
-  const [tab, setTab] = useState<
-    "author" | "reader" | "book" | "typeBook" | "typeReader"
-  >("reader");
+    const [activeTab, setActiveTab] = useState<string>('reader');
+    const [searchKeyword, setSearchKeyword] = useState('');
+    const [debouncedKeyword, setDebouncedKeyword] = useState('');
 
-  const [searchKeyword, setSearchKeyword] = useState("");
+    // Logic Search & Debounce giữ nguyên như cũ
+    useEffect(() => {
+        setSearchKeyword('');
+        setDebouncedKeyword('');
+    }, [activeTab]);
 
-  return (
-    <div className="w-full min-h-screen bg-[#f4f7f9]">
-      <div className="bg-[#153D36] px-12 py-4 flex justify-between items-center">
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchKeyword}
-          onChange={(e) => setSearchKeyword(e.target.value)}
-          className="w-[400px] px-4 py-2 rounded-full outline-none text-sm text-black bg-white"
-        />
-        <div className="text-xl text-white">🔔</div>
-      </div>
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedKeyword(searchKeyword);
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [searchKeyword]);
 
-      <div className="px-12 py-6">
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex gap-2">
-            {["author", "reader", "book", "typeBook", "typeReader"].map(
-              (type) => (
-                <button
-                  key={type}
-                  onClick={() => setTab(type as typeof tab)}
-                  className={`px-4 py-2 rounded text-sm font-medium ${
-                    tab === type
-                      ? "bg-[#153D36] text-white"
-                      : "bg-[#e5e7eb] text-[#153D36]"
-                  }`}
-                >
-                  {
-                    {
-                      author: "Tác giả",
-                      reader: "Độc giả",
-                      book: "Sách",
-                      typeBook: "Loại sách",
-                      typeReader: "Loại độc giả",
-                    }[type]
-                  }
-                </button>
-              )
-            )}
-          </div>
-        </div>
+    // Menu Dropdown cho User (Ví dụ: Đăng xuất, Cài đặt)
+    const userMenuItems: MenuProps['items'] = [
+        { key: '1', label: 'Thông tin cá nhân', icon: <UserOutlined /> },
+        { key: '2', label: 'Cài đặt', icon: <SettingOutlined /> },
+        { type: 'divider' },
+        {
+            key: '3',
+            label: 'Đăng xuất',
+            icon: <LogoutOutlined />,
+            danger: true,
+        },
+    ];
 
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-[#153D36]">
-            {
-              {
-                reader: "Độc giả",
-                author: "Tác giả",
-                book: "Danh sách sách",
-                typeBook: "Loại sách",
-                typeReader: "Loại độc giả",
-              }[tab]
-            }
-          </h2>
-        </div>
+    const tabItems = [
+        {
+            key: 'reader',
+            label: 'Độc giả',
+            icon: <TeamOutlined />,
+            children: <ReaderList keyword={debouncedKeyword} />,
+        },
+        {
+            key: 'author',
+            label: 'Tác giả',
+            icon: <SolutionOutlined />,
+            children: <AuthorList keyword={debouncedKeyword} />,
+        },
+        {
+            key: 'book',
+            label: 'Kho sách',
+            icon: <ReadOutlined />,
+            children: <BookList keyword={debouncedKeyword} />,
+        },
+        {
+            key: 'typeBook',
+            label: 'Loại sách',
+            icon: <TagsOutlined />,
+            children: <TypeBookList keyword={debouncedKeyword} />,
+        },
+        {
+            key: 'typeReader',
+            label: 'Loại độc giả',
+            icon: <BookOutlined />,
+            children: <TypeReaderList keyword={debouncedKeyword} />,
+        },
+    ];
 
-        {tab === "book" ? (
-          <BookList keyword={searchKeyword} />
-        ) : tab === "reader" ? (
-          <ReaderList keyword={searchKeyword} />
-        ) : tab === "author" ? (
-          <AuthorList keyword={searchKeyword} />
-        ) : tab === "typeBook" ? (
-          <TypeBookList keyword={searchKeyword} />
-        ) : (
-          <TypeReaderList keyword={searchKeyword} />
-        )}
-      </div>
-    </div>
-  );
+    return (
+        <Layout className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
+            {/* Header Section */}
+            <div className="bg-gradient-to-r from-[#153D36] via-[#1A4A42] to-[#0D2621] px-8 py-6">
+                <div className="max-w-[1600px] mx-auto">
+                    <Title
+                        level={2}
+                        style={{
+                            color: 'white',
+                            margin: 0,
+                            fontWeight: 700,
+                        }}
+                    >
+                        Quản lý thư viện
+                    </Title>
+                    <Text className="text-emerald-200/80">
+                        Tra cứu và quản lý dữ liệu hệ thống
+                    </Text>
+                </div>
+            </div>
+
+            <Content className="p-6 md:p-10 max-w-[1600px] mx-auto w-full">
+                {/* === PHẦN NỘI DUNG CHÍNH (CARD TRẮNG) === */}
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <Tabs
+                        activeKey={activeTab}
+                        onChange={setActiveTab}
+                        type="card"
+                        size="large"
+                        // Tùy chỉnh CSS cho Tabs để nó hòa nhập với nền trắng
+                        className="custom-admin-tabs pt-4 px-4"
+                        items={tabItems.map((item) => ({
+                            key: item.key,
+                            label: (
+                                <span className="flex items-center gap-2 px-1 py-1">
+                                    {item.icon}
+                                    {item.label}
+                                </span>
+                            ),
+                            children: (
+                                <div className="p-2 animate-fadeIn min-h-[500px]">
+                                    {/* Truyền keyword xuống children */}
+                                    {item.children}
+                                </div>
+                            ),
+                        }))}
+                        // Thanh Search nằm gọn bên phải Tabs
+                        tabBarExtraContent={
+                            <div className="mr-2 pb-1 w-[280px] md:w-[350px]">
+                                <Input
+                                    placeholder="Tìm kiếm theo tên, mã..."
+                                    prefix={
+                                        <SearchOutlined className="text-gray-400" />
+                                    }
+                                    value={searchKeyword}
+                                    onChange={(e) =>
+                                        setSearchKeyword(e.target.value)
+                                    }
+                                    allowClear
+                                    className="rounded-lg bg-gray-50 hover:bg-white focus:bg-white border-gray-200 hover:border-[#153D36] focus:border-[#153D36] transition-all"
+                                />
+                            </div>
+                        }
+                    />
+                </div>
+            </Content>
+        </Layout>
+    );
 };
 
 export default List;

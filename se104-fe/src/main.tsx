@@ -36,6 +36,8 @@ import UserList from "./pages/admin/userList";
 import Report from "./pages/manager/report";
 import Parameter from "./pages/manager/parameter";
 import UserBorrowList from "./pages/client/UserBorrowList";
+import LandingPage from "./pages/landingPage";
+import AIChatWidget from "./components/AIChatWidget";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -94,7 +96,6 @@ const router = createBrowserRouter([
           { index: true, element: <RolePermissionUI /> },
           { path: "roles", element: <RolePermissionUI /> },
           { path: "users", element: <UserList /> },
-          { path: "roles", element: <RolePermissionUI /> },
         ],
       },
     ],
@@ -104,6 +105,8 @@ const router = createBrowserRouter([
   { path: "/forgot", element: <ForgotPasswordPage /> },
   { path: "/verification", element: <VerificationCodePage /> },
   { path: "/new-pass", element: <NewPasswordPage /> },
+  { path: "/chatAI", element: <AIChatWidget /> },
+  { path: "/landingPage", element: <LandingPage /> },
 ]);
 
 createRoot(document.getElementById("root")!).render(

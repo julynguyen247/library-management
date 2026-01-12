@@ -1,27 +1,28 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+// Thêm import Navigate
+import { Link, Outlet, useLocation, Navigate } from "react-router-dom";
 import { useCurrentApp } from "@/components/context/app.context";
-import { Button, Result } from "antd";
+import { Button, Result, Spin } from "antd";
 
 const ProtectedRoute = () => {
-  const { isAuthenticated, user } = useCurrentApp();
+  const { isAuthenticated, user, loading } = useCurrentApp();
   const location = useLocation();
-  const role = user?.roleName;
 
-  if (!isAuthenticated) {
+  // 1. Nếu đang tải thì hiện Spin xoay
+  if (loading) {
     return (
-      <Result
-        status="404"
-        title="Not Login"
-        subTitle="Bạn vui lòng đăng nhập để sử dụng tính năng này."
-        extra={
-          <Button type="primary">
-            <Link to="/signin">Đăng nhập</Link>
-          </Button>
-        }
-      />
+      <div className="flex items-center justify-center h-screen">
+        <Spin size="large" />
+      </div>
     );
   }
 
+  // 2. QUAN TRỌNG: Nếu chưa đăng nhập -> Chuyển hướng hẳn sang trang /landingPage
+  if (!isAuthenticated) {
+    return <Navigate to="/landingPage" replace />;
+  }
+
+  // 3. Logic check quyền (Giữ nguyên)
+  const role = user?.data?.roleName;
   const path = location.pathname;
   const isAdmin = path.includes("admin");
   const isManager = path.includes("manager");
